@@ -1,9 +1,16 @@
-export const projects = [
-  {
-    id: 1,
-    title: 'Project One',
-    description: 'A short description of the project.',
-    url: 'https://github.com',
-    tags: ['React', 'Node.js'],
-  },
+export const ALL_PROJECTS = [
+  { id: 1,  name: 'Portfolio Website',     year: '2025', type: 'React · GSAP',      category: 'Development',    img: '/images/projects/1.jpg',  desc: 'Personal portfolio with scroll-driven TV frame sequence, CRT transition effects, and custom animation systems.' },
+  { id: 2,  name: 'Task Manager App',       year: '2024', type: 'Full-stack',         category: 'Development',    img: '/images/projects/2.jpg',  desc: 'Full-stack task management app with real-time collaboration, drag-and-drop, and role-based access control.' },
+  { id: 3,  name: 'Design System CLI',      year: '2024', type: 'Node · CLI Tool',    category: 'Development',    img: '/images/projects/3.jpg',  desc: 'Command-line tool for scaffolding design tokens, generating component stubs, and syncing Figma variables.' },
+  { id: 4,  name: 'E-Commerce API',         year: '2023', type: 'REST · GraphQL',     category: 'Development',    img: '/images/projects/4.jpg',  desc: 'Headless commerce API supporting multi-tenant storefronts, inventory management, and payment integrations.' },
+  { id: 5,  name: 'Banking App Redesign',   year: '2024', type: 'Mobile · iOS',       category: 'UI / UX Design', img: '/images/projects/5.jpg',  desc: 'End-to-end redesign of a retail banking app — simplified navigation, improved transaction clarity, WCAG AA.' },
+  { id: 6,  name: 'SaaS Dashboard',         year: '2024', type: 'Web Application',    category: 'UI / UX Design', img: '/images/projects/6.jpg',  desc: 'Analytics dashboard for a B2C SaaS product. Reduced time-to-insight from 4 clicks to 1 through information architecture.' },
+  { id: 7,  name: 'Onboarding Flow',        year: '2023', type: 'UX Research',        category: 'UI / UX Design', img: '/images/projects/7.jpg',  desc: 'Research-led redesign of a multi-step onboarding flow. Increased activation rate by 34% in A/B testing.' },
+  { id: 8,  name: 'Component Library',      year: '2023', type: 'Design System',      category: 'UI / UX Design', img: '/images/projects/8.jpg',  desc: 'Figma-to-code design system with 60+ components, dark/light mode, and automated Storybook documentation.' },
+  { id: 9,  name: 'Health Tracking App',    year: '2024', type: '0→1 Product',        category: 'Product Design', img: '/images/projects/9.jpg',  desc: 'Zero-to-one consumer health app — strategy, UX, and visual design from concept through beta launch.' },
+  { id: 10, name: 'B2B Analytics Platform', year: '2023', type: 'Enterprise SaaS',    category: 'Product Design', img: '/images/projects/10.jpg', desc: 'Enterprise data platform redesign. Consolidated 5 legacy tools into a unified workspace for 200+ analysts.' },
+  { id: 11, name: 'Consumer Marketplace',   year: '2023', type: 'Two-sided Market',   category: 'Product Design', img: '/images/projects/11.jpg', desc: 'Marketplace product design spanning seller onboarding, buyer discovery, and trust-building mechanics.' },
+  { id: 12, name: 'Internal Tools Suite',   year: '2022', type: 'Ops Tooling',        category: 'Product Design', img: '/images/projects/12.jpg', desc: 'Suite of internal tools for operations teams — ticketing, reporting, and workflow automation in one interface.' },
 ]
+
+export const pad = (n) => String(n).padStart(2, '0')
