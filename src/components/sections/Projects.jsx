@@ -251,6 +251,16 @@ export default function Projects() {
               cursor: "pointer",
             }}
           >
+            {/* Cover image */}
+            {project.img && (
+              <img
+                src={project.img}
+                alt={project.name}
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                onError={(e) => { e.currentTarget.style.display = 'none' }}
+              />
+            )}
+
             {/* Ghost index number — always visible, very subtle */}
             <span
               style={{
