@@ -68,17 +68,18 @@ export default function ProjectPage() {
   return (
     <div ref={pageRef} style={{ backgroundColor: '#0c0c0c', minHeight: '100vh', opacity: 0, display: 'flex', flexDirection: 'column' }}>
       <Navbar />
-      <main style={{ padding: '120px 52px 80px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <main style={{ padding: '72px 52px 80px', flex: 1, display: 'flex', flexDirection: 'column' }}>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '48px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', position: 'relative', zIndex: 60 }}>
           <button
             ref={backRef}
             onClick={() => navigate(-1)}
-            style={{ ...mono, fontSize: '0.78rem', color: '#909090', background: 'none', border: 'none', cursor: 'pointer', padding: 0, transition: 'color 0.2s' }}
+            style={{ ...mono, fontSize: '0.78rem', color: '#909090', background: 'none', border: 'none', cursor: 'pointer', padding: 0, marginLeft: '10px', transition: 'color 0.2s', display: 'flex', alignItems: 'center', gap: '8px' }}
             onMouseEnter={(e) => (e.currentTarget.style.color = '#F9F3E2')}
             onMouseLeave={(e) => (e.currentTarget.style.color = '#909090')}
           >
-            Back
+            <span style={{ fontSize: '1rem', lineHeight: 1 }}>←</span>
+            <span>Back</span>
           </button>
           <span ref={numRef} style={{ ...mono, fontSize: '0.78rem', color: '#333' }}>
             {pad(project.id)} / {pad(ALL_PROJECTS.length)}
@@ -100,19 +101,37 @@ export default function ProjectPage() {
           ))}
         </div>
 
-        <div ref={imgRef} style={{ opacity: 0, width: '100%', aspectRatio: '16 / 9', backgroundColor: '#1a1a1a', marginBottom: '48px', overflow: 'hidden', position: 'relative' }}>
-          <img src={project.img} alt={project.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} onError={(e) => { e.currentTarget.style.display = 'none' }} />
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
-            <span style={{ ...mono, fontSize: '0.65rem', color: '#333' }}>{project.type}</span>
-          </div>
+        <div ref={imgRef} style={{ opacity: 0, marginBottom: '48px', display: 'flex', justifyContent: 'center' }}>
+          {!project.pageImg && project.imgSmall ? (
+            <img src={project.img} alt={project.name} style={{ maxHeight: '520px', width: 'auto', display: 'block', objectFit: 'contain' }} onError={(e) => { e.currentTarget.style.display = 'none' }} />
+          ) : (
+            <div style={{ width: '100%', aspectRatio: '28 / 9', backgroundColor: '#1a1a1a', overflow: 'hidden', position: 'relative' }}>
+              <img src={project.pageImg ?? project.img} alt={project.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} onError={(e) => { e.currentTarget.style.display = 'none' }} />
+            </div>
+          )}
         </div>
 
-        <div ref={bodyRef} style={{ opacity: 0, maxWidth: '720px', marginBottom: 'auto' }}>
+        <div ref={bodyRef} style={{ opacity: 0, maxWidth: '720px', marginBottom: project.gallery?.length ? '48px' : 'auto' }}>
           <span style={{ ...mono, fontSize: '0.85rem', color: '#909090', display: 'block', marginBottom: '20px' }}>// overview</span>
           <p style={{ fontFamily: '"Courier New", Courier, monospace', fontSize: 'clamp(1rem, 1.8vw, 1.35rem)', fontWeight: 400, letterSpacing: '0.02em', lineHeight: 1.75, color: '#F9F3E2', margin: 0, textTransform: 'none' }}>
             {project.desc}
           </p>
         </div>
+
+        {project.gallery?.length > 0 && (
+          <div style={{ marginBottom: 'auto', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '3px' }}>
+            {project.gallery.map((src, i) => (
+              <div key={i} style={{ backgroundColor: '#1a1a1a', overflow: 'hidden', aspectRatio: project.gallery.length === 3 ? '4 / 5' : '3 / 2' }}>
+                <img
+                  src={src}
+                  alt={`${project.name} — ${i + 1}`}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  onError={(e) => { e.currentTarget.parentElement.style.display = 'none' }}
+                />
+              </div>
+            ))}
+          </div>
+        )}
 
         <div ref={navRef} style={{ opacity: 0, borderTop: '1px solid #2a2a2a', marginTop: '64px', paddingTop: '24px', display: 'flex', justifyContent: 'space-between' }}>
           {prevProject ? (
