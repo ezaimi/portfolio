@@ -30,9 +30,11 @@ export default function Navbar() {
     closeTimer.current = setTimeout(() => setOpen(false), 120)
   }
 
+  const isProjectPage = pathname.startsWith('/projects/')
+
   const leftLink = pathname === '/'
     ? <Link to="/about" className={lc}>About Me</Link>
-    : <Link to="/" className={lc}>← Home</Link>
+    : <Link to="/" className={lc}>{isProjectPage ? 'Home' : '← Home'}</Link>
 
   const midLink = (pathname === '/works' || pathname === '/contact')
     ? <Link to="/about" className={lc}>About Me</Link>
