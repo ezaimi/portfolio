@@ -107,12 +107,19 @@ export const ALL_PROJECTS = [
   },
   {
     id: 11,
-    name: "B2B Analytics Platform",
-    year: "2023",
-    type: "Enterprise SaaS",
+    name: "Bond.",
+    year: "2025",
+    type: "Visual Design",
     category: "Product Design",
-    img: "/images/projects/10.jpg",
-    desc: "Enterprise data platform redesign. Consolidated 5 legacy tools into a unified workspace for 200+ analysts.",
+    img: "/images/bond/bonds.png",
+    desc: "Visual identity and graphic design project — brand assets, compositions, and art direction.",
+    gallery: [
+    
+      "/images/bond/bond1.png",
+      "/images/bond/bond2.png",
+      "/images/bond/bond4.png",
+      "/images/bond/bond3.png",
+    ],
   },
   {
     id: 12,
