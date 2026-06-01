@@ -73,7 +73,7 @@ export default function ProjectPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', position: 'relative', zIndex: 60 }}>
           <button
             ref={backRef}
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/#projects')}
             style={{ ...mono, fontSize: '0.78rem', color: '#909090', background: 'none', border: 'none', cursor: 'pointer', padding: 0, marginLeft: '10px', transition: 'color 0.2s', display: 'flex', alignItems: 'center', gap: '8px' }}
             onMouseEnter={(e) => (e.currentTarget.style.color = '#F9F3E2')}
             onMouseLeave={(e) => (e.currentTarget.style.color = '#909090')}
@@ -119,9 +119,9 @@ export default function ProjectPage() {
         </div>
 
         {project.gallery?.length > 0 && (
-          <div style={{ marginBottom: 'auto', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '3px' }}>
+          <div style={{ marginBottom: 'auto', display: 'grid', gridTemplateColumns: `repeat(${project.gallery.length === 4 ? 4 : 3}, 1fr)`, gap: '3px' }}>
             {project.gallery.map((src, i) => (
-              <div key={i} style={{ backgroundColor: '#1a1a1a', overflow: 'hidden', aspectRatio: project.gallery.length === 3 ? '4 / 5' : '3 / 2' }}>
+              <div key={i} style={{ backgroundColor: '#1a1a1a', overflow: 'hidden', aspectRatio: project.gallery.length === 3 ? '4 / 5' : project.gallery.length === 4 ? '4 / 5' : '3 / 2' }}>
                 <img
                   src={src}
                   alt={`${project.name} — ${i + 1}`}
