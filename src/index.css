@@ -1,5 +1,37 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Cormorant Hero';
+  src: url('/fonts/CormorantGaramond-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cormorant Hero';
+  src: url('/fonts/CormorantGaramond-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Space Mono Hero';
+  src: url('/fonts/SpaceMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Space Mono Hero';
+  src: url('/fonts/SpaceMono-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --font-sans: 'Inter', system-ui, sans-serif;
 }
@@ -9,8 +41,16 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
-*, *::before, *::after {
-  cursor: none !important;
+
+.filter-tab {
+  color: #aaa;
+  transition: color 0.2s ease;
+}
+.filter-tab--active {
+  color: #1a1a1a;
+}
+.filter-tab:hover:not(.filter-tab--active) {
+  color: #555;
 }
 
 @keyframes char-slide {
@@ -23,4 +63,5 @@ html {
 .char-animating {
   animation: char-slide 0.65s 1 forwards;
 }
+
 
