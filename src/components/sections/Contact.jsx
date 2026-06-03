@@ -11,10 +11,103 @@ const mono = {
 };
 
 const LINKS = [
-  { label: "GitHub",   href: "https://github.com/" },
-  { label: "LinkedIn", href: "https://linkedin.com/in/" },
-  { label: "Dribbble", href: "https://dribbble.com/" },
+  { label: "GitHub",   href: "https://github.com/ezaimi" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/erisazaimi/" },
 ];
+
+const contactCss = `
+@media (max-width: 1199px) {
+  .contact-section {
+    padding: clamp(5rem, 12vw, 7rem) clamp(1.25rem, 6vw, 3.25rem) clamp(3rem, 8vw, 5rem) !important;
+  }
+
+  .contact-spacer {
+    display: none !important;
+  }
+
+  .contact-head {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 1rem !important;
+    margin-bottom: clamp(1rem, 4vw, 1.5rem) !important;
+  }
+
+  .contact-title {
+    font-size: clamp(4.2rem, 16vw, 9rem) !important;
+    max-width: 100% !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .contact-line {
+    width: 100% !important;
+    margin-bottom: 0 !important;
+  }
+
+  .contact-meta {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 0.6rem !important;
+    align-items: start !important;
+    margin-bottom: clamp(1rem, 4vw, 1.5rem) !important;
+  }
+
+  .contact-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .contact-cell {
+    min-width: 0 !important;
+    min-height: clamp(10rem, 26vw, 13rem) !important;
+    padding: clamp(1rem, 3vw, 1.25rem) !important;
+  }
+
+  .contact-cell:nth-child(2) {
+    border-right: 0 !important;
+  }
+
+  .contact-cell:nth-child(1),
+  .contact-cell:nth-child(2) {
+    border-bottom: 1px solid #2a2a2a !important;
+  }
+
+  .contact-email {
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .contact-copy {
+    justify-content: flex-start !important;
+  }
+}
+
+@media (max-width: 639px) {
+  .contact-section {
+    padding-top: clamp(4.5rem, 18vw, 6rem) !important;
+  }
+
+  .contact-title {
+    font-size: clamp(3.7rem, 18vw, 4.7rem) !important;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .contact-cell {
+    border-right: 0 !important;
+    border-bottom: 1px solid #2a2a2a !important;
+    min-height: 9.5rem !important;
+  }
+
+  .contact-cell:last-child {
+    border-bottom: 0 !important;
+  }
+
+  .contact-copy {
+    margin-top: 1.25rem !important;
+  }
+}
+`;
 
 export default function Contact() {
   const sectionRef = useRef(null);
@@ -62,20 +155,24 @@ export default function Contact() {
     <section
       ref={sectionRef}
       id="contact"
+      className="contact-section"
       style={{
         backgroundColor: "#F9F3E2",
         minHeight: "auto",
+        overflowX: "clip",
         padding: "60px 52px 80px",
         display: "flex",
         flexDirection: "column",
       }}
     >
+      <style>{contactCss}</style>
       {/* Spacer — pushes heading + grid to the bottom */}
-      <div style={{ flex: 1 }} />
+      <div className="contact-spacer" style={{ flex: 1 }} />
 
       {/* Heading inline with the divider line */}
       <div
         ref={headRef}
+        className="contact-head"
         style={{
           display: "flex",
           alignItems: "flex-end",
@@ -84,6 +181,7 @@ export default function Contact() {
         }}
       >
         <h2
+          className="contact-title"
           style={{
             fontSize: "clamp(5rem, 14vw, 25rem)",
             fontWeight: 300,
@@ -97,6 +195,7 @@ export default function Contact() {
           Let's talk.
         </h2>
         <div
+          className="contact-line"
           style={{
             flex: 1,
             height: "1px",
@@ -109,6 +208,7 @@ export default function Contact() {
       {/* Meta bar */}
       <div
         ref={metaRef}
+        className="contact-meta"
         style={{
           marginBottom: "20px",
           display: "flex",
@@ -127,6 +227,7 @@ export default function Contact() {
       {/* 4-column contact strip */}
       <div
         ref={cellsRef}
+        className="contact-grid"
         style={{
           display: "grid",
           gridTemplateColumns: "2fr 1fr 1fr 1fr",
@@ -148,6 +249,7 @@ export default function Contact() {
             // email
           </span>
           <a
+            className="contact-email"
             href="mailto:erisa.zaimi2@mail.com"
             style={{
               fontFamily: '"Courier New", monospace',
@@ -253,6 +355,7 @@ export default function Contact() {
 
       {/* Copyright */}
       <div
+        className="contact-copy"
         style={{
           marginTop: "16px",
           display: "flex",

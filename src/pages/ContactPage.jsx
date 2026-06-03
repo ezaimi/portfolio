@@ -9,9 +9,8 @@ const mono = {
 }
 
 const LINKS = [
-  { label: 'GitHub',   href: 'https://github.com/' },
-  { label: 'LinkedIn', href: 'https://linkedin.com/in/' },
-  { label: 'Dribbble', href: 'https://dribbble.com/' },
+  { label: 'GitHub',   href: 'https://github.com/ezaimi' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/erisazaimi/' },
 ]
 
 const LOOKING_FOR = [

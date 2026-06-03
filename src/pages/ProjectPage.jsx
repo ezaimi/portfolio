@@ -105,8 +105,8 @@ export default function ProjectPage() {
           {!project.pageImg && project.imgSmall ? (
             <img src={project.img} alt={project.name} style={{ maxHeight: '520px', width: 'auto', display: 'block', objectFit: 'contain' }} onError={(e) => { e.currentTarget.style.display = 'none' }} />
           ) : (
-            <div style={{ width: '100%', aspectRatio: '28 / 9', backgroundColor: '#1a1a1a', overflow: 'hidden', position: 'relative' }}>
-              <img src={project.pageImg ?? project.img} alt={project.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} onError={(e) => { e.currentTarget.style.display = 'none' }} />
+            <div style={{ width: '100%', aspectRatio: project.pageImgRatio ?? '28 / 9', backgroundColor: '#1a1a1a', overflow: 'hidden', position: 'relative' }}>
+              <img src={project.pageImg ?? project.img} alt={project.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 40%', display: 'block' }} onError={(e) => { e.currentTarget.style.display = 'none' }} />
             </div>
           )}
         </div>

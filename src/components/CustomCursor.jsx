@@ -7,12 +7,33 @@ export default function CustomCursor() {
     const dot = dotRef.current
     if (!dot) return
 
-    const move = (e) => {
-      dot.style.transform = `translate(${e.clientX - 5}px, ${e.clientY - 5}px)`
+    let mouseX = window.innerWidth / 2
+    let mouseY = window.innerHeight / 2
+    let curX = mouseX
+    let curY = mouseY
+    let rafId
+
+    const onMouseMove = (e) => {
+      mouseX = e.clientX
+      mouseY = e.clientY
     }
 
-    window.addEventListener('mousemove', move)
-    return () => window.removeEventListener('mousemove', move)
+    const animate = () => {
+      // lerp factor — lower = more lag, higher = snappier
+      const ease = 0.12
+      curX += (mouseX - curX) * ease
+      curY += (mouseY - curY) * ease
+      dot.style.transform = `translate(${curX - 7.5}px, ${curY - 7.5}px)`
+      rafId = requestAnimationFrame(animate)
+    }
+
+    window.addEventListener('mousemove', onMouseMove)
+    rafId = requestAnimationFrame(animate)
+
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove)
+      cancelAnimationFrame(rafId)
+    }
   }, [])
 
   return (
