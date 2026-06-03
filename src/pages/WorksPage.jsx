@@ -72,17 +72,24 @@ export default function WorksPage() {
     if (!cardRef.current || !imgRef.current) return
 
     if (hoveredProject.current?.id === project.id) return
+    const previewSrc = project.img
+    const showPreviewImage = () => {
+      imgRef.current.style.display = 'block'
+      imgRef.current.style.opacity = 1
+      imgRef.current.src = previewSrc
+    }
 
     if (hoveredProject.current === null) {
-      // First hover — just show card
-      imgRef.current.src = project.img
+      // First hover - just show card
+      showPreviewImage()
       gsap.to(cardRef.current, { opacity: 1, scale: 1, duration: 0.28, ease: 'power2.out' })
     } else {
-      // Switch image: fade out → swap src → fade in
+      // Switch image: fade out, swap src, fade in
       gsap.to(imgRef.current, {
         opacity: 0, duration: 0.14, ease: 'power1.in',
         onComplete: () => {
-          imgRef.current.src = project.img
+          imgRef.current.style.display = 'block'
+          imgRef.current.src = previewSrc
           gsap.to(imgRef.current, { opacity: 1, duration: 0.18, ease: 'power1.out' })
         },
       })
@@ -167,7 +174,6 @@ export default function WorksPage() {
           transform: 'translateZ(0)',
           willChange: 'left, top',
           backgroundColor: '#0c0c0c',
-          border: '1px solid #2a2a2a',
           overflow: 'hidden',
         }}
       >
@@ -183,29 +189,6 @@ export default function WorksPage() {
             }}
             onError={(e) => { e.currentTarget.style.display = 'none' }}
           />
-          {/* Fallback pattern shown when no image */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              pointerEvents: 'none',
-            }}
-          >
-            <span
-              style={{
-                fontFamily: '"Courier New", monospace',
-                fontSize: '0.6rem',
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                color: '#333',
-              }}
-            >
-              {hoveredProject.current?.type}
-            </span>
-          </div>
         </div>
       </div>
 
@@ -264,13 +247,12 @@ export default function WorksPage() {
                 key={f}
                 ref={(el) => { filterRefs.current[f] = el }}
                 onClick={() => handleFilter(f)}
+                className={`filter-tab${activeFilter === f ? ' filter-tab--active' : ''}`}
                 style={{
                   background: 'none', border: 'none', cursor: 'pointer', padding: '0 0 6px',
                   fontFamily: 'Inter, system-ui, sans-serif',
                   fontSize: '0.82rem',
                   fontWeight: activeFilter === f ? 600 : 400,
-                  color: activeFilter === f ? '#1a1a1a' : '#aaa',
-                  transition: 'color 0.25s ease',
                 }}
               >
                 {f}
