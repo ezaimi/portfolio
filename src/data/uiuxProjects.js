@@ -1,0 +1,38 @@
+export const UIUX_PROJECTS = [
+  {
+    id: 5,
+    name: "Banking App Redesign",
+    year: "2024",
+    type: "Mobile · iOS",
+    category: "UI / UX Design",
+    img: "/images/projects/5.jpg",
+    desc: "End-to-end redesign of a retail banking app — simplified navigation, improved transaction clarity, WCAG AA.",
+  },
+  {
+    id: 6,
+    name: "SaaS Dashboard",
+    year: "2024",
+    type: "Web Application",
+    category: "UI / UX Design",
+    img: "/images/projects/6.jpg",
+    desc: "Analytics dashboard for a B2C SaaS product. Reduced time-to-insight from 4 clicks to 1 through information architecture.",
+  },
+  {
+    id: 7,
+    name: "Onboarding Flow",
+    year: "2023",
+    type: "UX Research",
+    category: "UI / UX Design",
+    img: "/images/projects/7.jpg",
+    desc: "Research-led redesign of a multi-step onboarding flow. Increased activation rate by 34% in A/B testing.",
+  },
+  {
+    id: 8,
+    name: "Component Library",
+    year: "2023",
+    type: "Design System",
+    category: "UI / UX Design",
+    img: "/images/projects/8.jpg",
+    desc: "Figma-to-code design system with 60+ components, dark/light mode, and automated Storybook documentation.",
+  },
+];
