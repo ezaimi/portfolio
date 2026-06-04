@@ -122,7 +122,7 @@ export default function AboutPage() {
             }}
           >
             <img
-              src="/images/oldme.png"
+              src="/images/old.png"
               alt="Erisa Zaimi"
               style={{
                 width: '100%',
