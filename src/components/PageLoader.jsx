@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { ALL_PROJECTS } from "../data/projects";
+import { ALL_PROJECTS } from "../data/index";
 
 const MONO = "'Space Mono Hero', 'Courier New', monospace";
 

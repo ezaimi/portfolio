@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import gsap from 'gsap'
 import Navbar from '../components/layout/Navbar'
-import { ALL_PROJECTS, pad } from '../data/projects'
+import { ALL_PROJECTS, pad } from '../data/index'
 
 const mono = {
   fontFamily: '"Courier New", Courier, monospace',
