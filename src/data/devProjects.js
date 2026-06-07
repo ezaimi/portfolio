@@ -5,7 +5,7 @@ export const DEV_PROJECTS = [
     year: "2026",
     type: "Python · LLM · RAG",
     category: "Development",
-    img: "/images/dev/thesis/thesismockup.png",
+    img: "/images/dev/thesis/thesismockup.webp",
     desc: "An open-LLM layer that explains and repairs dependency errors in scientific Jupyter notebooks — automatically, and at scale.",
     overview:
       "Most published research notebooks don't actually re-run. Usually it's something small — a library that isn't installed, or the wrong version of one — but the effect is the same: work that's supposed to be reproducible just isn't. Existing reproducibility pipelines are good at spotting these failures, then stop there. This project adds the missing step. When a notebook breaks, an open, locally-run LLM reads the traceback, explains in plain English what went wrong, looks up the correct package version live on PyPI, applies the fix, and re-runs the notebook to confirm it worked — logging every attempt as a reusable benchmark and feeding the outcome into a FAIR knowledge graph.",
@@ -30,11 +30,11 @@ export const DEV_PROJECTS = [
     year: "2026",
     type: "Next.js · Astro",
     category: "Development",
-    img: "/images/dev/wedding/template3.png",
+    img: "/images/dev/wedding/template3.webp",
     images: [
-      "/images/dev/wedding/template3.png",
-      "/images/dev/wedding/template2.png",
-      "/images/dev/wedding/wedding3.png",
+      "/images/dev/wedding/template3.webp",
+      "/images/dev/wedding/template2.webp",
+      "/images/dev/wedding/wedding3.webp",
     ],
     desc: "A full-stack platform for building and sharing personalized digital wedding invitations — six animated templates, built-in RSVP tracking, and a couple's own soundtrack, all behind a single shareable link.",
     overview:
@@ -60,7 +60,7 @@ export const DEV_PROJECTS = [
     year: "2026",
     type: "Spring Boot · Next.js",
     category: "Development",
-    img: "/images/dev/pos/saporini_mockup1.png",
+    img: "/images/dev/pos/saporini_mockup1.webp",
     desc: "A production-grade restaurant POS and management platform — handling everything from authentication to kitchen workflows, built for real operations rather than a CRUD demo.",
     overview:
       "Most restaurant software either does one thing well or tries to do everything badly. This platform manages the full operational flow of a restaurant — owners configure menus, branches, roles, and settings from a back office; waiters and cashiers create orders, assign them to tables, and take payments from a touch-friendly POS terminal; and the kitchen sees incoming tickets live through a KDS-style workflow. Underneath it's organized like a real enterprise system: cleanly separated domains (auth, menu, orders, payments, inventory, KDS, reports, settings) behind a layered Spring Boot backend, with security treated as a first-class concern — every request is scoped so one branch's staff can never reach another branch's data.",
@@ -87,10 +87,10 @@ export const DEV_PROJECTS = [
     year: "2025–2026",
     type: "Three.js · WebXR · Next.js",
     category: "Development",
-    img: "/images/dev/webxr/3dmockup.png",
+    img: "/images/dev/webxr/3dmockup.webp",
      images: [
-      "/images/dev/webxr/3dmockup.png",
-      "/images/dev/webxr/3dmock.png",
+      "/images/dev/webxr/3dmockup.webp",
+      "/images/dev/webxr/3dmock.webp",
     ],
     desc: "An immersive German-learning platform where you study vocabulary inside explorable 3D rooms — and in AR, right through your phone's browser.",
     overview:

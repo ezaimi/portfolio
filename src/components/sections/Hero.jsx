@@ -63,8 +63,8 @@ function AnimatedWords({ words, charClassName, charStyle, charWrapStyle, gap = '
 const getBorderPx = () => window.innerWidth >= 600 ? 40 : 0
 const FRAME_COUNT = 62
 const frameSrc = (i) => {
-  if (i === 61) return '/images/tv2.png'
-  if (i === 62) return '/images/tvshadow.png'
+  if (i === 61) return '/images/tv2.webp'
+  if (i === 62) return '/images/tvshadow.webp'
   return `/frames/tv-frame-${String(i).padStart(4, '0')}.webp`
 }
 
@@ -156,7 +156,7 @@ export default function Hero() {
 
     // --- youngme image ---
     const youngMeImg = new Image()
-    youngMeImg.src = '/images/youngme.png'
+    youngMeImg.src = '/images/youngme.webp'
 
     // --- offscreen canvas for animated noise ---
     const noiseOffscreen = document.createElement('canvas')
@@ -814,7 +814,7 @@ export default function Hero() {
             >
               <div
                 className="absolute top-0 left-0 right-0 bg-cover bg-center bg-[#1a1a1a] grayscale-25"
-                style={{ backgroundImage: "url('/images/bg-p.png')", height: '200%' }}
+                style={{ backgroundImage: "url('/images/bg-p.webp')", height: '200%' }}
               />
             </div>
 
@@ -826,7 +826,7 @@ export default function Hero() {
             >
               <div
                 className="absolute bottom-0 left-0 right-0 bg-cover bg-center bg-[#1a1a1a] grayscale-25"
-                style={{ backgroundImage: "url('/images/bg-p.png')", height: '200%' }}
+                style={{ backgroundImage: "url('/images/bg-p.webp')", height: '200%' }}
               />
             </div>
 

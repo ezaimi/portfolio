@@ -776,7 +776,7 @@ export default function NowSection() {
           </div>
 
           <div ref={portraitRef} className="now-portrait">
-            <img src="/images/old.png" alt="Erisa Zaimi" />
+            <img src="/images/old.webp" alt="Erisa Zaimi" />
             <div className="now-portrait-shade" />
             <div className="now-portrait-caption">
               <span style={{ opacity: 0.75 }}>Hi, it's me!</span>

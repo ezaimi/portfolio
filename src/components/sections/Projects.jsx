@@ -7,6 +7,134 @@ import { ALL_PROJECTS, pad } from "../../data/index";
 gsap.registerPlugin(ScrollTrigger);
 
 const FILTERS = ["Development", /* "UI / UX Design", */ "Product Design"];
+const projectImageCache = new Map();
+
+const isProjectCoverImage = (src) =>
+  Boolean(src) && !src.startsWith("/images/projects/");
+
+function isProjectImageReady(src) {
+  return projectImageCache.get(src)?.ready === true;
+}
+
+function markProjectImageReady(src) {
+  const cached = projectImageCache.get(src);
+  if (cached) cached.ready = true;
+}
+
+function warmProjectImage(src, highPriority = false) {
+  if (!isProjectCoverImage(src) || typeof Image === "undefined") {
+    return Promise.resolve(src);
+  }
+
+  const cached = projectImageCache.get(src);
+  if (cached) return cached.ready ? Promise.resolve(src) : cached.promise;
+
+  const img = new Image();
+  const entry = { ready: false, promise: null };
+
+  entry.promise = new Promise((resolve) => {
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+
+      const decoded = img.decode ? img.decode().catch(() => undefined) : Promise.resolve();
+      decoded.finally(() => {
+        entry.ready = true;
+        resolve(src);
+      });
+    };
+
+    img.onload = finish;
+    img.onerror = finish;
+    img.decoding = "async";
+    img.loading = "eager";
+    if ("fetchPriority" in img) img.fetchPriority = highPriority ? "high" : "low";
+    img.src = src;
+
+    if (img.complete && img.naturalWidth > 0) finish();
+  });
+
+  projectImageCache.set(src, entry);
+  return entry.promise;
+}
+
+function warmFilterImages(filter, highPriority = false) {
+  const sources = ALL_PROJECTS
+    .filter((project) => project.category === filter)
+    .map((project) => project.img)
+    .filter(isProjectCoverImage);
+
+  return Promise.all(sources.map((src) => warmProjectImage(src, highPriority)));
+}
+
+function ProjectCardImage({ src, alt, priority }) {
+  const imgRef = useRef(null);
+  const [loaded, setLoaded] = useState(() => isProjectImageReady(src));
+
+  useEffect(() => {
+    let alive = true;
+    setLoaded(isProjectImageReady(src));
+
+    warmProjectImage(src, priority).then(() => {
+      if (alive) setLoaded(true);
+    });
+
+    return () => {
+      alive = false;
+    };
+  }, [src, priority]);
+
+  useLayoutEffect(() => {
+    const img = imgRef.current;
+    if (img?.complete && img.naturalWidth > 0) {
+      markProjectImageReady(src);
+      setLoaded(true);
+    }
+  }, [src]);
+
+  const reveal = (img) => {
+    const finish = () => {
+      markProjectImageReady(src);
+      setLoaded(true);
+    };
+
+    if (img.decode) {
+      img.decode().catch(() => undefined).finally(finish);
+      return;
+    }
+
+    finish();
+  };
+
+  return (
+    <img
+      ref={imgRef}
+      src={src}
+      alt={alt}
+      loading="eager"
+      decoding="async"
+      fetchPriority={priority ? "high" : "low"}
+      style={{
+        position: "absolute",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+        display: "block",
+        opacity: loaded ? 1 : 0,
+        transform: "translateZ(0)",
+        transition: "opacity 0.22s ease",
+        willChange: "opacity",
+      }}
+      onLoad={(e) => reveal(e.currentTarget)}
+      onError={(e) => {
+        e.currentTarget.style.display = "none";
+        markProjectImageReady(src);
+      }}
+    />
+  );
+}
 
 const projectsCss = `
 .projects-filter-button[data-active="false"]:hover {
@@ -133,14 +261,25 @@ export default function Projects() {
   const sectionRef   = useRef(null);
   const headRef      = useRef(null);
   const metaRef      = useRef(null);
-  const gridRef      = useRef(null);
   const filterBarRef = useRef(null);
   const filterRefs   = useRef({});
-  const isAnimating    = useRef(false);
-  const isFirstRender  = useRef(true);
   const userStopped    = useRef(!!location.state?.filter);
 
   const filtered = ALL_PROJECTS.filter((p) => p.category === activeFilter);
+
+  useEffect(() => {
+    warmFilterImages(activeFilter, true);
+
+    const requestIdle = window.requestIdleCallback ?? ((callback) => window.setTimeout(callback, 1));
+    const cancelIdle = window.cancelIdleCallback ?? window.clearTimeout;
+    const idleId = requestIdle(() => {
+      FILTERS.forEach((filter) => {
+        if (filter !== activeFilter) warmFilterImages(filter);
+      });
+    });
+
+    return () => cancelIdle(idleId);
+  }, [activeFilter]);
 
   // Slide the underline indicator to the active tab
   useEffect(() => {
@@ -157,28 +296,10 @@ export default function Projects() {
   }, [activeFilter]);
 
   const handleFilter = (f, isAuto = false) => {
-    if (f === activeFilter || isAnimating.current) return;
+    if (f === activeFilter) return;
     if (!isAuto) userStopped.current = true;
-    isAnimating.current = true;
-
-    const cards = gridRef.current?.querySelectorAll(".proj-card");
-    if (!cards?.length) {
-      setActiveFilter(f);
-      return;
-    }
-
-    gsap.killTweensOf(cards);
-    gsap.to(cards, {
-      opacity: 0,
-      y: -8,
-      scale: 0.985,
-      stagger: { each: 0.012, from: "end" },
-      duration: 0.12,
-      ease: "power1.out",
-      overwrite: "auto",
-      force3D: true,
-      onComplete: () => setActiveFilter(f),
-    });
+    warmFilterImages(f, true);
+    setActiveFilter(f);
   };
 
   // Auto-advance tabs every 3 s; stops permanently on manual click
@@ -190,33 +311,6 @@ export default function Projects() {
     }, 3000);
     return () => clearTimeout(id);
   }, [activeFilter]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Animate new cards in after filter change (useLayoutEffect prevents flash)
-  useLayoutEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    const cards = gridRef.current?.querySelectorAll(".proj-card");
-    if (!cards?.length) return;
-
-    gsap.killTweensOf(cards);
-    gsap.fromTo(
-      cards,
-      { opacity: 0, y: 10, scale: 0.99 },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        stagger: { each: 0.018, from: "start" },
-        duration: 0.24,
-        ease: "power2.out",
-        overwrite: "auto",
-        force3D: true,
-        onComplete: () => { isAnimating.current = false; },
-      }
-    );
-  }, [activeFilter]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -240,7 +334,7 @@ export default function Projects() {
           "-=0.55"
         )
         .fromTo(
-          ".proj-card",
+          ".projects-grid-layer[data-active='true'] .proj-card",
           { opacity: 0, y: 32 },
           { opacity: 1, y: 0, stagger: 0.07, duration: 0.75, ease: "power3.out" },
           "-=0.45"
@@ -359,110 +453,128 @@ export default function Projects() {
 
       {/* ── 4-column project grid ── */}
       <div
-        ref={gridRef}
-        className="projects-grid"
+        className="projects-grid-stack"
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: "3px",
+          position: "relative",
         }}
       >
-        {filtered.map((project) => (
-          <div
-            key={project.id}
-            className="proj-card"
-            onMouseEnter={() => setHoveredId(project.id)}
-            onMouseLeave={() => setHoveredId(null)}
-            onClick={() => navigate(`/projects/${project.id}`)}
-            style={{
-              aspectRatio: "1",
-              backgroundColor: "#1a1a1a",
-              position: "relative",
-              overflow: "hidden",
-              cursor: "pointer",
-              willChange: "transform, opacity",
-              transform: "translateZ(0)",
-            }}
-          >
-            {/* Cover image */}
-            {project.img && !project.img.startsWith("/images/projects/") && (
-              <img
-                src={project.img}
-                alt={project.name}
-                style={{
-                  position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block',
-                  opacity: 1,
-                  transform: 'translateZ(0)',
-                }}
-                onError={(e) => { e.currentTarget.style.display = 'none' }}
-              />
-            )}
+        {FILTERS.map((filter) => {
+          const isActive = filter === activeFilter;
+          const projects = ALL_PROJECTS.filter((project) => project.category === filter);
 
-            {/* Ghost index number — always visible, very subtle */}
-            {(!project.img || project.img.startsWith("/images/projects/")) && (
-              <span
-                className="proj-card-index"
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  fontFamily: '"Courier New", monospace',
-                  fontSize: "clamp(2.5rem, 4.5vw, 6rem)",
-                  fontWeight: 300,
-                  color: "rgba(249,243,226,0.06)",
-                  letterSpacing: "-0.04em",
-                  userSelect: "none",
-                  pointerEvents: "none",
-                }}
-              >
-                {pad(project.id)}
-              </span>
-            )}
-
-            {/* Hover overlay: gradient + project info */}
+          return (
             <div
-              className="proj-card-overlay"
+              key={filter}
+              className="projects-grid projects-grid-layer"
+              data-active={isActive}
               style={{
-                position: "absolute",
-                inset: 0,
-                background:
-                  "linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 55%)",
-                opacity: hoveredId === project.id ? 1 : 0,
-                transition: "opacity 0.25s ease",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "flex-end",
-                padding: "16px",
+                gridArea: "1 / 1",
+                display: "grid",
+                gridTemplateColumns: "repeat(4, 1fr)",
+                gap: "3px",
+                opacity: isActive ? 1 : 0,
+                pointerEvents: isActive ? "auto" : "none",
+                transform: isActive ? "translate3d(0, 0, 0)" : "translate3d(0, 8px, 0)",
+                transition:
+                  "opacity 0.48s cubic-bezier(0.22, 1, 0.36, 1), transform 0.48s cubic-bezier(0.22, 1, 0.36, 1)",
+                willChange: "opacity, transform",
+                zIndex: isActive ? 2 : 1,
               }}
             >
-              <div
-                style={{
-                  fontFamily: '"Courier New", monospace',
-                  fontSize: "0.68rem",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color: "rgba(249,243,226,0.95)",
-                  marginBottom: "4px",
-                }}
-              >
-                {project.name}
-              </div>
-              <div
-                style={{
-                  fontFamily: '"Courier New", monospace',
-                  fontSize: "0.55rem",
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  color: "rgba(249,243,226,0.5)",
-                }}
-              >
-                {project.type} · {project.year}
-              </div>
-            </div>
+              {projects.map((project) => (
+                <div
+                  key={project.id}
+                  className="proj-card"
+                  onMouseEnter={() => setHoveredId(project.id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                  onClick={() => navigate(`/projects/${project.id}`)}
+                  style={{
+                    aspectRatio: "1",
+                    backgroundColor: "#1a1a1a",
+                    position: "relative",
+                    overflow: "hidden",
+                    cursor: "pointer",
+                    willChange: "transform, opacity",
+                    transform: "translateZ(0)",
+                  }}
+                >
+                  {/* Cover image */}
+                  {project.img && !project.img.startsWith("/images/projects/") && (
+                    <ProjectCardImage
+                      src={project.img}
+                      alt={project.name}
+                      priority={isActive}
+                    />
+                  )}
 
-          </div>
-        ))}
+                  {/* Ghost index number — always visible, very subtle */}
+                  {(!project.img || project.img.startsWith("/images/projects/")) && (
+                    <span
+                      className="proj-card-index"
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        fontFamily: '"Courier New", monospace',
+                        fontSize: "clamp(2.5rem, 4.5vw, 6rem)",
+                        fontWeight: 300,
+                        color: "rgba(249,243,226,0.06)",
+                        letterSpacing: "-0.04em",
+                        userSelect: "none",
+                        pointerEvents: "none",
+                      }}
+                    >
+                      {pad(project.id)}
+                    </span>
+                  )}
+
+                  {/* Hover overlay: gradient + project info */}
+                  <div
+                    className="proj-card-overlay"
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      background:
+                        "linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 55%)",
+                      opacity: hoveredId === project.id ? 1 : 0,
+                      transition: "opacity 0.25s ease",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "flex-end",
+                      padding: "16px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontFamily: '"Courier New", monospace',
+                        fontSize: "0.68rem",
+                        letterSpacing: "0.08em",
+                        textTransform: "uppercase",
+                        color: "rgba(249,243,226,0.95)",
+                        marginBottom: "4px",
+                      }}
+                    >
+                      {project.name}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: '"Courier New", monospace',
+                        fontSize: "0.55rem",
+                        letterSpacing: "0.12em",
+                        textTransform: "uppercase",
+                        color: "rgba(249,243,226,0.5)",
+                      }}
+                    >
+                      {project.type} · {project.year}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          );
+        })}
       </div>
     </section>
   );

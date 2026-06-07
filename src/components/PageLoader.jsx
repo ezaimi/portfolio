@@ -1,31 +1,9 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { ALL_PROJECTS } from "../data/index";
 
 const MONO = "'Space Mono Hero', 'Courier New', monospace";
 
 const fmt = (n) => (n < 10 ? `0${n}` : `${n}`);
-
-const PROJECT_IMAGE_PATHS = [
-  ...new Set(
-    ALL_PROJECTS.flatMap((project) => [project.img, project.pageImg])
-      .filter((src) => src && !src.startsWith("/images/projects/"))
-  ),
-];
-
-const preloadImage = (src) => new Promise((resolve) => {
-  const img = new Image();
-  img.onload = async () => {
-    try {
-      if (img.decode) await img.decode();
-    } catch {
-      // Decoding can fail for cached images in some browsers; the load still helps.
-    }
-    resolve(src);
-  };
-  img.onerror = () => resolve(src);
-  img.src = src;
-});
 
 export default function PageLoader({ onDone }) {
   const topRef      = useRef(null);
@@ -61,40 +39,46 @@ export default function PageLoader({ onDone }) {
       });
     };
 
-    // Phase 1 — rapid scramble (0 → 0.5s)
+    // Phase 1 — rapid scramble (0 → 0.2s)
     scramble = setInterval(() => {
       if (numberRef.current)
         numberRef.current.textContent = fmt(Math.floor(Math.random() * 100));
     }, 50);
 
-    // Phase 2 — smooth count + progress bar (starts at 0.5s)
+    // Phase 2 — smooth count + progress bar (starts at 0.2s)
     const startCount = setTimeout(() => {
       clearInterval(scramble);
 
       gsap.fromTo(
         detailRef.current,
         { opacity: 0 },
-        { opacity: 1, duration: 0.5, ease: "power2.out", delay: 0.3 }
+        { opacity: 1, duration: 0.5, ease: "power2.out", delay: 0.1 }
       );
 
-      const total = PROJECT_IMAGE_PATHS.length;
-      let loaded = 0;
-      const minDuration = new Promise((resolve) => setTimeout(resolve, 1400));
-      const assetsReady = Promise.all(
-        PROJECT_IMAGE_PATHS.map((src) => preloadImage(src).then(() => {
-          loaded += 1;
-          setProgress(total ? Math.min(96, (loaded / total) * 96) : 96);
-        }))
-      );
+      const minDuration = new Promise((resolve) => setTimeout(resolve, 500));
 
-      Promise.all([assetsReady, minDuration]).then(() => {
+      // Animate progress bar independently of network — feels responsive
+      gsap.to(progress, {
+        val: 96,
+        duration: 0.45,
+        ease: "power2.out",
+        onUpdate() {
+          const value = Math.round(progress.val);
+          if (numberRef.current)
+            numberRef.current.textContent = fmt(value);
+          if (barFillRef.current)
+            barFillRef.current.style.transform = `scaleX(${progress.val / 100})`;
+        },
+      });
+
+      minDuration.then(() => {
         if (isCancelled) return;
         setProgress(100);
         finishCall = gsap.delayedCall(0.22, () => {
           if (!isCancelled) exit.play();
         });
       });
-    }, 500);
+    }, 200);
 
     // Exit — split panels apart after count finishes
     const exit = gsap.timeline({
@@ -133,30 +117,6 @@ export default function PageLoader({ onDone }) {
 
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 9999, pointerEvents: "none" }}>
-      <div
-        aria-hidden="true"
-        style={{
-          position: "fixed",
-          left: "-9999px",
-          top: 0,
-          width: 1,
-          height: 1,
-          overflow: "hidden",
-          opacity: 0.001,
-        }}
-      >
-        {PROJECT_IMAGE_PATHS.map((src) => (
-          <img
-            key={src}
-            src={src}
-            alt=""
-            decoding="sync"
-            loading="eager"
-            style={{ width: 1, height: 1, objectFit: "cover" }}
-          />
-        ))}
-      </div>
-
       {/* Split panels */}
       <div ref={topRef}    style={{ position: "absolute", top: 0,    left: 0, right: 0, height: "50%", background: "#0a0a0a" }} />
       <div ref={bottomRef} style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "50%", background: "#0a0a0a" }} />
