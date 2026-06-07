@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import PrivacyPolicyModal from "../PrivacyPolicyModal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -114,6 +115,7 @@ export default function Contact() {
   const headRef    = useRef(null);
   const metaRef    = useRef(null);
   const cellsRef   = useRef(null);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -359,13 +361,34 @@ export default function Contact() {
         style={{
           marginTop: "16px",
           display: "flex",
-          justifyContent: "flex-end",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
+        <button
+          onClick={() => setPrivacyOpen(true)}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: 0,
+            ...mono,
+            fontSize: '0.72rem',
+            color: '#444',
+            textTransform: 'uppercase',
+            transition: 'color 0.2s',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = '#888')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = '#444')}
+        >
+          Privacy Policy
+        </button>
         <span style={{ ...mono, fontSize: "0.72rem", color: "#666" }}>
           © 2025 Erisa Zaimi
         </span>
       </div>
+
+      {privacyOpen && <PrivacyPolicyModal onClose={() => setPrivacyOpen(false)} />}
     </section>
   );
 }

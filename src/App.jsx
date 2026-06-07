@@ -70,6 +70,13 @@ function preloadProjectImages() {
 function App() {
   const [loading, setLoading] = useState(true)
 
+  useEffect(() => {
+    if (!sessionStorage.getItem('tracked')) {
+      sessionStorage.setItem('tracked', '1')
+      fetch('/api/track', { method: 'POST' }).catch(() => {})
+    }
+  }, [])
+
   const handleLoaderDone = useCallback(() => {
     setLoading(false);
     preloadProjectImages();
