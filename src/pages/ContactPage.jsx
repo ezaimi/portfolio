@@ -92,7 +92,7 @@ export default function ContactPage() {
         {/* ── Big email link ── */}
         <div ref={emailRef} style={{ opacity: 0, marginBottom: '60px' }}>
           <a
-            href="mailto:erisa.zaimi2@mail.com"
+            href="mailto:erisazaimi22@gmail.com"
             style={{
               display: 'inline-block',
               fontFamily: '"Courier New", Courier, monospace',
@@ -114,7 +114,7 @@ export default function ContactPage() {
               e.currentTarget.style.borderBottomColor = 'rgba(249,243,226,0.2)'
             }}
           >
-            erisa.zaimi2@mail.com ↗
+            erisazaimi22@gmail.com ↗
           </a>
         </div>
 

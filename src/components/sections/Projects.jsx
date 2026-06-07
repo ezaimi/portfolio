@@ -6,7 +6,7 @@ import { ALL_PROJECTS, pad } from "../../data/index";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const FILTERS = ["Development", "UI / UX Design", "Product Design"];
+const FILTERS = ["Development", /* "UI / UX Design", */ "Product Design"];
 
 const projectsCss = `
 .projects-filter-button[data-active="false"]:hover {

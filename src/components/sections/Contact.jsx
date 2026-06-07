@@ -250,7 +250,7 @@ export default function Contact() {
           </span>
           <a
             className="contact-email"
-            href="mailto:erisa.zaimi2@mail.com"
+            href="mailto:erisazaimi22@gmail.com"
             style={{
               fontFamily: '"Courier New", monospace',
               fontSize: "clamp(0.75rem, 1.4vw, 1.1rem)",
@@ -263,7 +263,7 @@ export default function Contact() {
             onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(249,243,226,0.5)")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "#F9F3E2")}
           >
-            erisa.zaimi2@mail.com ↗
+            erisazaimi22@gmail.com ↗
           </a>
         </div>
 

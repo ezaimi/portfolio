@@ -5,10 +5,9 @@ import gsap from 'gsap'
 const lc = 'text-[#F9F3E2] text-[13px] min-[1400px]:text-[15px] tracking-wide uppercase font-light no-underline hover:opacity-50 transition-opacity duration-200 font-mono'
 
 const QUICK_LINKS = [
-  { label: 'CV / Resume', href: '/cv.pdf',                          icon: '↓', download: true  },
   { label: 'GitHub',      href: 'https://github.com/ezaimi',        icon: '↗', external: true  },
   { label: 'LinkedIn',    href: 'https://www.linkedin.com/in/erisazaimi/', icon: '↗', external: true  },
-  { label: 'Email',       href: 'mailto:erisa.zaimi2@mail.com',     icon: '→'                  },
+  { label: 'Email',       href: 'mailto:erisazaimi22@gmail.com',    icon: '→'                  },
 ]
 
 const NAV_LINKS = [

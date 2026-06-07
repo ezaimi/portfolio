@@ -2,7 +2,7 @@ export const PRODUCT_DESIGN_PROJECTS = [
   {
     id: 9,
     name: "Bond.",
-    year: "2025",
+    year: "2026",
     type: "Visual Design",
     category: "Product Design",
     img: "/images/productdesign/bond/bonds.png",
@@ -20,7 +20,7 @@ export const PRODUCT_DESIGN_PROJECTS = [
   {
     id: 10,
     name: "Boa",
-    year: "2025",
+    year: "2026",
     type: "Visual Design",
     category: "Product Design",
     img: "/images/productdesign/boa/boa.png",
@@ -36,23 +36,22 @@ export const PRODUCT_DESIGN_PROJECTS = [
   {
     id: 11,
     name: "Fore",
-    year: "2025",
+    year: "2023",
     type: "Visual Design",
     category: "Product Design",
     img: "/images/productdesign/fore/fore card green bg.png",
     desc: "Visual identity and graphic design project — brand assets, compositions, and art direction.",
     gallery: [
-      "/images/productdesign/fore/fore1.png",
+    
       "/images/productdesign/fore/2.png",
       "/images/productdesign/fore/3.png",
       "/images/productdesign/fore/4.png",
-      "/images/productdesign/fore/5.png",
       "/images/productdesign/fore/6.png",
     ],
   },
   {
     id: 12,
-    name: "Form",
+    name: "Form Brute",
     year: "2025",
     type: "Brand Identity",
     category: "Product Design",
@@ -62,6 +61,11 @@ export const PRODUCT_DESIGN_PROJECTS = [
     gallery: [
       "/images/productdesign/form/formlog.png",
       "/images/productdesign/form/form1.png",
+      "/images/productdesign/form/form2.png",
+    ],
+    mobileGallery: [
+      "/images/productdesign/form/form1.png",
+      "/images/productdesign/form/formlog.png",
       "/images/productdesign/form/form2.png",
     ],
   },

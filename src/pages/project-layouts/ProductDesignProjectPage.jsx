@@ -1,8 +1,19 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import gsap from 'gsap'
 import Navbar from '../../components/layout/Navbar'
 import { ALL_PROJECTS, pad } from '../../data/index'
+
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < breakpoint)
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${breakpoint - 1}px)`)
+    const handler = (e) => setIsMobile(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [breakpoint])
+  return isMobile
+}
 
 const mono = {
   fontFamily: '"Courier New", Courier, monospace',
@@ -19,6 +30,7 @@ const META_FIELDS = (p) => [
 
 export default function ProductDesignProjectPage({ project, prevProject, nextProject }) {
   const navigate = useNavigate()
+  const isMobile = useIsMobile()
 
   const pageRef = useRef(null)
   const backRef = useRef(null)
@@ -48,7 +60,7 @@ export default function ProductDesignProjectPage({ project, prevProject, nextPro
   return (
     <div ref={pageRef} style={{ backgroundColor: '#0c0c0c', minHeight: '100vh', opacity: 0, display: 'flex', flexDirection: 'column' }}>
       <Navbar />
-      <main style={{ padding: '72px 52px 80px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <main style={{ padding: isMobile ? '80px 20px 60px' : '72px 52px 80px', flex: 1, display: 'flex', flexDirection: 'column' }}>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', position: 'relative', zIndex: 60 }}>
           <button
@@ -72,9 +84,9 @@ export default function ProductDesignProjectPage({ project, prevProject, nextPro
           </h1>
         </div>
 
-        <div ref={metaRef} style={{ opacity: 0, borderTop: '1px solid #2a2a2a', borderBottom: '1px solid #2a2a2a', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', marginBottom: '48px' }}>
+        <div ref={metaRef} style={{ opacity: 0, borderTop: '1px solid #2a2a2a', borderBottom: '1px solid #2a2a2a', display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', marginBottom: '48px' }}>
           {META_FIELDS(project).map(({ label, value }, i) => (
-            <div key={label} style={{ padding: '18px 0', borderRight: i < 3 ? '1px solid #2a2a2a' : 'none', paddingLeft: i === 0 ? 0 : '24px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div key={label} style={{ padding: '14px 0', borderRight: (isMobile ? i % 2 === 0 : i < 3) ? '1px solid #2a2a2a' : 'none', borderBottom: isMobile && i < 2 ? '1px solid #2a2a2a' : 'none', paddingLeft: (isMobile ? i % 2 !== 0 : i !== 0) ? '20px' : 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <span style={{ ...mono, fontSize: '0.72rem', color: '#909090' }}>{label}</span>
               <span style={{ ...mono, fontSize: '0.85rem', color: '#F9F3E2' }}>{value}</span>
             </div>
@@ -85,8 +97,8 @@ export default function ProductDesignProjectPage({ project, prevProject, nextPro
           {!project.pageImg && project.imgSmall ? (
             <img src={project.img} alt={project.name} style={{ maxHeight: '520px', width: 'auto', display: 'block', objectFit: 'contain' }} onError={(e) => { e.currentTarget.style.display = 'none' }} />
           ) : (
-            <div style={{ width: '100%', aspectRatio: project.pageImgRatio ?? '28 / 9', backgroundColor: '#1a1a1a', overflow: 'hidden', position: 'relative' }}>
-              <img src={project.pageImg ?? project.img} alt={project.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 40%', display: 'block' }} onError={(e) => { e.currentTarget.style.display = 'none' }} />
+            <div style={{ width: '100%', aspectRatio: isMobile ? '4 / 3' : (project.pageImgRatio ?? '28 / 9'), backgroundColor: '#1a1a1a', overflow: 'hidden', position: 'relative' }}>
+              <img src={project.pageImg ?? project.img} alt={project.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: project.name === 'Fore' ? 'center 50%' : 'center 40%', display: 'block' }} onError={(e) => { e.currentTarget.style.display = 'none' }} />
             </div>
           )}
         </div>
@@ -99,9 +111,19 @@ export default function ProductDesignProjectPage({ project, prevProject, nextPro
         </div>
 
         {project.gallery?.length > 0 && (
-          <div style={{ marginBottom: 'auto', display: 'grid', gridTemplateColumns: `repeat(${project.gallery.length === 4 ? 4 : 3}, 1fr)`, gap: '3px' }}>
-            {project.gallery.map((src, i) => (
-              <div key={i} style={{ backgroundColor: '#1a1a1a', overflow: 'hidden', aspectRatio: project.gallery.length === 3 ? '4 / 5' : project.gallery.length === 4 ? '4 / 5' : '3 / 2' }}>
+          <div style={{ marginBottom: 'auto', display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : `repeat(${project.gallery.length === 4 ? 4 : 3}, 1fr)`, gap: '3px' }}>
+            {(isMobile && project.mobileGallery ? project.mobileGallery : project.gallery).map((src, i) => (
+              <div
+                key={i}
+                style={{
+                  backgroundColor: '#1a1a1a',
+                  overflow: 'hidden',
+                  gridColumn: isMobile && project.gallery.length === 3 && i === 0 ? '1 / -1' : undefined,
+                  aspectRatio: isMobile
+                    ? (project.gallery.length === 3 && i === 0 ? '16 / 9' : '1 / 1')
+                    : (project.gallery.length === 3 ? '4 / 5' : project.gallery.length === 4 ? '4 / 5' : '3 / 2'),
+                }}
+              >
                 <img
                   src={src}
                   alt={`${project.name} — ${i + 1}`}

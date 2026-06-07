@@ -10,7 +10,7 @@ const mono = {
   textTransform: 'uppercase',
 }
 
-const FILTERS = ['Development', 'UI / UX Design', 'Product Design']
+const FILTERS = ['Development', /* 'UI / UX Design', */ 'Product Design']
 
 // Lerp for smooth card follow
 const lerp = (a, b, t) => a + (b - a) * t

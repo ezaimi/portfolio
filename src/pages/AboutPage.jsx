@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import Navbar from '../components/layout/Navbar'
+import { EXPERIENCE, EDUCATION, FOCUS, CURRENTLY, STACK } from '../data/aboutData'
 
 const mono = {
   fontFamily: '"Courier New", Courier, monospace',
@@ -8,24 +9,6 @@ const mono = {
   letterSpacing: '0.14em',
   textTransform: 'uppercase',
 }
-
-const EXPERIENCE = [
-  { role: 'Internship',                  company: 'Vodafone',       years: 'May 2022 – June 2022' },
-  { role: 'Freelance Full-Stack Developer', company: 'Self-employed', years: '2022 – 2025' },
-  { role: 'Visual Designer',             company: 'Studit',         years: '2025 – 2026' },
-]
-
-const EDUCATION = [
-  { num: '01', degree: 'B.Sc.', field: 'Software Engineering', years: '2021 – 2024' },
-  { num: '02', degree: 'M.Sc.', field: 'Web Engineering',      years: '2024 – 2026' },
-]
-
-const FOCUS = [
-  'Web Development',
-  'UI / UX Design',
-  'Frontend Systems',
-  'Design Systems',
-]
 
 export default function AboutPage() {
   const pageRef     = useRef(null)
@@ -181,8 +164,7 @@ export default function AboutPage() {
                   textTransform: 'none',
                 }}
               >
-                Full-stack developer with a strong eye for UI/UX and visual design.
-                I build polished digital products from backend logic to beautiful user interfaces.
+                {CURRENTLY.bio}
               </p>
               <p
                 style={{
@@ -195,7 +177,7 @@ export default function AboutPage() {
                   textTransform: 'none',
                 }}
               >
-                Open to full-time opportunities and freelance.
+                {CURRENTLY.status}
               </p>
             </div>
 
@@ -204,7 +186,7 @@ export default function AboutPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <span style={{ ...mono, color: '#909090' }}>// stack</span>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                {['React', 'Next.js', 'TypeScript', 'Node.js', 'Tailwind CSS', 'GSAP', 'Figma', 'PostgreSQL', 'Python', 'Git', 'Framer', 'After Effects'].map((s) => (
+                {STACK.map((s) => (
                   <span
                     key={s}
                     style={{

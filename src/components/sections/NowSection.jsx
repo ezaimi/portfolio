@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { EXPERIENCE, EDUCATION, FOCUS, CURRENTLY } from "../../data/aboutData";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -396,7 +397,7 @@ const nowSectionCss = `
   }
 
   .now-focus-item {
-    width: min(100%, 12.5rem);
+    width: min(100%, 15.5rem);
     padding: 0.2rem 0.45rem;
   }
 
@@ -536,38 +537,6 @@ function CircleBadge({ badgeRef, className = "" }) {
   );
 }
 
-const EXPERIENCE = [
-  { role: "Internship", company: "Vodafone", years: "May 2022 - June 2022" },
-  {
-    role: "Freelance Full-Stack Developer",
-    company: "Self-employed",
-    years: "2022 - 2025",
-  },
-  { role: "Visual Designer", company: "Studit", years: "2025 - 2026" },
-];
-
-const EDUCATION = [
-  {
-    num: "01",
-    degree: "B.Sc.",
-    field: "Software Engineering",
-    years: "2021 - 2024",
-  },
-  {
-    num: "02",
-    degree: "M.Sc.",
-    field: "Web Engineering",
-    years: "2024 - 2026",
-  },
-];
-
-const FOCUS = [
-  "Web Development",
-  "UI / UX Design",
-  "Frontend Systems",
-  "Design Systems",
-];
-
 export default function NowSection() {
   const sectionRef = useRef(null);
   const innerRef = useRef(null);
@@ -691,15 +660,13 @@ export default function NowSection() {
                 style={{ ...mono }}
                 className="now-mono now-copy"
               >
-                Full-stack developer with a strong eye for UI/UX and visual
-                design. I build polished digital products from backend logic to
-                beautiful user interfaces.
+                {CURRENTLY.bio}
               </p>
               <p
                 style={{ ...mono }}
                 className="now-mono now-copy now-copy-muted"
               >
-                Open to full-time opportunities and freelance.
+                {CURRENTLY.status}
               </p>
             </div>
 

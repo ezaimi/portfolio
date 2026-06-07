@@ -1,8 +1,19 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import gsap from 'gsap'
 import Navbar from '../../components/layout/Navbar'
 import { ALL_PROJECTS, pad } from '../../data/index'
+
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < breakpoint)
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${breakpoint - 1}px)`)
+    const handler = (e) => setIsMobile(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [breakpoint])
+  return isMobile
+}
 
 const mono = {
   fontFamily: '"Courier New", Courier, monospace',
@@ -19,15 +30,30 @@ const META_FIELDS = (p) => [
 
 export default function DevProjectPage({ project, prevProject, nextProject }) {
   const navigate = useNavigate()
+  const isMobile = useIsMobile()
+  const [imgIndex, setImgIndex] = useState(0)
+  const images = project.images ?? [project.img]
 
-  const pageRef = useRef(null)
-  const backRef = useRef(null)
-  const numRef  = useRef(null)
-  const headRef = useRef(null)
-  const metaRef = useRef(null)
-  const imgRef  = useRef(null)
-  const bodyRef = useRef(null)
-  const navRef  = useRef(null)
+  const pageRef       = useRef(null)
+  const backRef       = useRef(null)
+  const numRef        = useRef(null)
+  const headRef       = useRef(null)
+  const metaRef       = useRef(null)
+  const imgRef        = useRef(null)
+  const bodyRef       = useRef(null)
+  const navRef        = useRef(null)
+  const currentImgRef  = useRef(null)
+  const userNavigated  = useRef(false)
+
+  useEffect(() => {
+    userNavigated.current = false
+    setImgIndex(0)
+  }, [project.id])
+
+  useEffect(() => {
+    if (!userNavigated.current || !currentImgRef.current) return
+    gsap.fromTo(currentImgRef.current, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power2.out' })
+  }, [imgIndex])
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -48,10 +74,40 @@ export default function DevProjectPage({ project, prevProject, nextProject }) {
   return (
     <div ref={pageRef} style={{ backgroundColor: '#0c0c0c', minHeight: '100vh', opacity: 0 }}>
       <Navbar />
-      <div style={{ display: 'flex', minHeight: 'calc(100vh - 60px)' }}>
+      <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', minHeight: isMobile ? 'auto' : 'calc(100vh - 60px)' }}>
+
+        {/* Image — top on mobile, right sticky on desktop */}
+        {isMobile && (
+          <div ref={imgRef} style={{ opacity: 0, width: '100%', aspectRatio: '4 / 3', backgroundColor: '#111', position: 'relative', overflow: 'hidden', flexShrink: 0 }}>
+            <img
+              ref={currentImgRef}
+              src={images[imgIndex]}
+              alt={project.name}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              onError={(e) => { e.currentTarget.style.display = 'none' }}
+            />
+            {images.length > 1 && (
+              <>
+                <button
+                  onClick={() => { userNavigated.current = true; setImgIndex(i => (i - 1 + images.length) % images.length) }}
+                  style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', fontFamily: '"Courier New", Courier, monospace', fontSize: '1rem', color: '#F9F3E2', background: 'rgba(12,12,12,0.55)', border: '1px solid rgba(249,243,226,0.15)', borderRadius: '50%', cursor: 'pointer', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >←</button>
+                <button
+                  onClick={() => { userNavigated.current = true; setImgIndex(i => (i + 1) % images.length) }}
+                  style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', fontFamily: '"Courier New", Courier, monospace', fontSize: '1rem', color: '#F9F3E2', background: 'rgba(12,12,12,0.55)', border: '1px solid rgba(249,243,226,0.15)', borderRadius: '50%', cursor: 'pointer', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >→</button>
+                <div style={{ position: 'absolute', bottom: '14px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '7px' }}>
+                  {images.map((_, i) => (
+                    <div key={i} style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: i === imgIndex ? '#F9F3E2' : 'rgba(249,243,226,0.25)', transition: 'background-color 0.3s' }} />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        )}
 
         {/* Left — scrollable info */}
-        <div style={{ flex: 1, padding: '72px 52px 80px', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: 1, padding: isMobile ? '32px 20px 60px' : '72px 52px 80px', display: 'flex', flexDirection: 'column' }}>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', position: 'relative', zIndex: 200 }}>
             <button
@@ -170,15 +226,43 @@ export default function DevProjectPage({ project, prevProject, nextProject }) {
 
         </div>
 
-        {/* Right — sticky image */}
-        <div ref={imgRef} style={{ opacity: 0, position: 'sticky', top: 0, width: '50vw', height: '100vh', flexShrink: 0, backgroundColor: '#111' }}>
+        {/* Right — sticky image / mini gallery (desktop only) */}
+        {!isMobile && <div ref={imgRef} style={{ opacity: 0, position: 'sticky', top: 0, width: '50vw', height: '100vh', flexShrink: 0, backgroundColor: '#111' }}>
           <img
-            src={project.img}
+            ref={currentImgRef}
+            src={images[imgIndex]}
             alt={project.name}
             style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
             onError={(e) => { e.currentTarget.style.display = 'none' }}
           />
-        </div>
+
+          {images.length > 1 && (
+            <>
+              <button
+                onClick={() => { userNavigated.current = true; setImgIndex(i => (i - 1 + images.length) % images.length) }}
+                style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', fontFamily: '"Courier New", Courier, monospace', fontSize: '1rem', color: '#F9F3E2', background: 'rgba(12,12,12,0.55)', border: '1px solid rgba(249,243,226,0.15)', borderRadius: '50%', cursor: 'pointer', width: '38px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.2s, border-color 0.2s' }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(12,12,12,0.85)'; e.currentTarget.style.borderColor = 'rgba(249,243,226,0.4)' }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(12,12,12,0.55)'; e.currentTarget.style.borderColor = 'rgba(249,243,226,0.15)' }}
+              >←</button>
+
+              <button
+                onClick={() => { userNavigated.current = true; setImgIndex(i => (i + 1) % images.length) }}
+                style={{ position: 'absolute', right: '20px', top: '50%', transform: 'translateY(-50%)', fontFamily: '"Courier New", Courier, monospace', fontSize: '1rem', color: '#F9F3E2', background: 'rgba(12,12,12,0.55)', border: '1px solid rgba(249,243,226,0.15)', borderRadius: '50%', cursor: 'pointer', width: '38px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.2s, border-color 0.2s' }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(12,12,12,0.85)'; e.currentTarget.style.borderColor = 'rgba(249,243,226,0.4)' }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(12,12,12,0.55)'; e.currentTarget.style.borderColor = 'rgba(249,243,226,0.15)' }}
+              >→</button>
+
+              <div style={{ position: 'absolute', bottom: '24px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px' }}>
+                {images.map((_, i) => (
+                  <div
+                    key={i}
+                    style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: i === imgIndex ? '#F9F3E2' : 'rgba(249,243,226,0.25)', transition: 'background-color 0.3s' }}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </div>}
 
       </div>
     </div>
