@@ -264,6 +264,8 @@ export default function Projects() {
   const filterBarRef = useRef(null);
   const filterRefs   = useRef({});
   const userStopped    = useRef(!!location.state?.filter);
+  const autoTimerRef   = useRef(null);
+  const hoverPausedRef = useRef(false);
 
   const filtered = ALL_PROJECTS.filter((p) => p.category === activeFilter);
 
@@ -295,22 +297,52 @@ export default function Projects() {
     });
   }, [activeFilter]);
 
+  const clearAutoTimer = () => {
+    if (autoTimerRef.current === null) return;
+    window.clearTimeout(autoTimerRef.current);
+    autoTimerRef.current = null;
+  };
+
+  const stopAutoSwitch = () => {
+    userStopped.current = true;
+    clearAutoTimer();
+  };
+
+  const pauseAutoSwitch = () => {
+    hoverPausedRef.current = true;
+    clearAutoTimer();
+  };
+
+  const resumeAutoSwitch = () => {
+    hoverPausedRef.current = false;
+    setHoveredId(null);
+  };
+
   const handleFilter = (f, isAuto = false) => {
     if (f === activeFilter) return;
-    if (!isAuto) userStopped.current = true;
+    if (!isAuto) stopAutoSwitch();
     warmFilterImages(f, true);
     setActiveFilter(f);
   };
 
-  // Auto-advance tabs every 3 s; stops permanently on manual click
+  const handleProjectEnter = (projectId) => {
+    pauseAutoSwitch();
+    setHoveredId(projectId);
+  };
+
+  // Auto-advance tabs every 3 s; manual tab clicks stop it, project hover pauses it.
   useEffect(() => {
     if (userStopped.current) return;
-    const id = setTimeout(() => {
+    if (hoverPausedRef.current || hoveredId !== null) return;
+    clearAutoTimer();
+    autoTimerRef.current = window.setTimeout(() => {
+      autoTimerRef.current = null;
+      if (userStopped.current || hoverPausedRef.current || hoveredId !== null) return;
       const next = FILTERS[(FILTERS.indexOf(activeFilter) + 1) % FILTERS.length];
       handleFilter(next, true);
     }, 3000);
-    return () => clearTimeout(id);
-  }, [activeFilter]); // eslint-disable-line react-hooks/exhaustive-deps
+    return clearAutoTimer;
+  }, [activeFilter, hoveredId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -486,8 +518,10 @@ export default function Projects() {
                 <div
                   key={project.id}
                   className="proj-card"
-                  onMouseEnter={() => setHoveredId(project.id)}
-                  onMouseLeave={() => setHoveredId(null)}
+                  onPointerEnter={() => handleProjectEnter(project.id)}
+                  onMouseEnter={() => handleProjectEnter(project.id)}
+                  onPointerLeave={resumeAutoSwitch}
+                  onMouseLeave={resumeAutoSwitch}
                   onClick={() => navigate(`/projects/${project.id}`)}
                   style={{
                     aspectRatio: "1",
