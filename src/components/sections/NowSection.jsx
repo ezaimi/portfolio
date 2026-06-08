@@ -39,6 +39,8 @@ const nowSectionCss = `
 
 .now-head {
   opacity: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .now-title {
@@ -335,7 +337,7 @@ const nowSectionCss = `
   }
 
   .now-heading {
-    padding: clamp(2rem, 3.3vw, 3rem) clamp(2rem, 3.6vw, 3.25rem) 0;
+    padding: clamp(1rem, 1.8vw, 1.75rem) clamp(2rem, 3.6vw, 3.25rem) 0;
   }
 
   .now-title {
@@ -388,6 +390,10 @@ const nowSectionCss = `
     font-size: clamp(0.58rem, 0.66vw, 0.85rem);
   }
 
+  .now-info .now-mono {
+    font-size: clamp(0.45rem, 0.5vw, 0.62rem);
+  }
+
   .now-stack {
     gap: clamp(0.45rem, 0.75vw, 0.65rem);
   }
@@ -417,7 +423,7 @@ const nowSectionCss = `
 
 @media (min-width: 1200px) and (max-height: 820px) {
   .now-heading {
-    padding: 3.5rem 2.25rem 0;
+    padding: 1.5rem 2.25rem 0;
   }
 
   .now-title {
@@ -450,6 +456,22 @@ const nowSectionCss = `
 
   .now-focus-item {
     padding: 0.16rem 0.4rem;
+  }
+}
+
+@media (min-width: 1200px) and (max-height: 720px) {
+  .now-body {
+    grid-template-columns: 60fr 40fr;
+    align-items: start;
+  }
+
+  .now-panels {
+    grid-template-rows: auto auto;
+    overflow: visible;
+  }
+
+  .now-panel {
+    overflow: visible;
   }
 }
 
@@ -634,9 +656,7 @@ export default function NowSection() {
               <span style={{ ...mono, color: "#aaa" }} className="now-mono">
                 Based in Germany
               </span>
-              <span style={{ ...mono, color: "#aaa" }} className="now-mono">
-                CET (GMT +1)
-              </span>
+            
             </div>
             <span style={{ ...mono, color: "#999" }} className="now-mono">
               Available for new projects

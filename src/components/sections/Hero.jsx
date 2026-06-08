@@ -269,6 +269,7 @@ export default function Hero() {
 
     // --- overlay (header + subtitle) shown when frame 62 is reached ---
     const startTypewriter = () => {
+      subtitlesDoneRef.current = false
       const el = subtitleRef.current
       if (!el) return
       if (typewriterTimerRef.current) clearTimeout(typewriterTimerRef.current)
@@ -539,11 +540,13 @@ export default function Hero() {
     }
     updateBorderPx()
 
+    const onPageShow = (e) => { if (e.persisted) window.dispatchEvent(new Event('scroll')) }
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('wheel', preventScroll, { passive: false })
     window.addEventListener('touchmove', preventScroll, { passive: false })
     window.addEventListener('keydown', preventScrollKey)
     window.addEventListener('resize', updateBorderPx)
+    window.addEventListener('pageshow', onPageShow)
 
     const resetToHeroStart = ({ markLoaderDone = false, animateName = false } = {}) => {
       const html = document.documentElement
@@ -583,6 +586,10 @@ export default function Hero() {
     window.addEventListener('loader:beforeReveal', prepareHeroReveal)
     window.addEventListener('loader:done', triggerName, { once: true })
 
+    if (window.__loaderDone) {
+      requestAnimationFrame(() => resetToHeroStart({ markLoaderDone: true, animateName: true }))
+    }
+
     // Spin the mobile badge
     const badgeSpin = mobileBadgeRef.current
       ? gsap.to(mobileBadgeRef.current, { rotation: 360, duration: 22, ease: 'none', repeat: -1, transformOrigin: '50% 50%' })
@@ -595,6 +602,7 @@ export default function Hero() {
       window.removeEventListener('touchmove', preventScroll)
       window.removeEventListener('keydown', preventScrollKey)
       window.removeEventListener('resize', updateBorderPx)
+      window.removeEventListener('pageshow', onPageShow)
       window.removeEventListener('loader:beforeReveal', prepareHeroReveal)
       window.removeEventListener('loader:done', triggerName)
       currentTl.current?.kill()
