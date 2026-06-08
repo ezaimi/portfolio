@@ -2,7 +2,7 @@
 
 My personal developer portfolio — a single-page site showcasing my projects, skills, and background.
 
-🔗 **Live site:** https://YOUR-DOMAIN-HERE
+🔗 **Live site:** https://erisazaimi.com
 
 ## Tech Stack
 
