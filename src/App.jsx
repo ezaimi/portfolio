@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { Analytics } from '@vercel/analytics/react'
 import Navbar from './components/layout/Navbar'
 import Hero from './components/sections/Hero'
 import NowSection from './components/sections/NowSection'
@@ -16,8 +17,12 @@ import { ALL_PROJECTS } from './data/index'
 function VisitTracker() {
   const location = useLocation()
   const pagesRef  = useRef([])
-  const startRef  = useRef(Date.now())
+  const startRef  = useRef(0)
   const sentRef   = useRef(false)
+
+  useEffect(() => {
+    startRef.current = Date.now()
+  }, [])
 
   useEffect(() => {
     const path = location.pathname
@@ -130,6 +135,7 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/projects/:id" element={<ProjectPage />} />
       </Routes>
+      <Analytics />
     </BrowserRouter>
   )
 }
