@@ -49,13 +49,8 @@ function VisitTracker() {
       }).catch(() => {})
     }
 
-    const onVisibility = () => { if (document.visibilityState === 'hidden') send() }
-    document.addEventListener('visibilitychange', onVisibility)
-    window.addEventListener('beforeunload', send)
-    return () => {
-      document.removeEventListener('visibilitychange', onVisibility)
-      window.removeEventListener('beforeunload', send)
-    }
+    const timer = setTimeout(send, 10 * 60 * 1000)
+    return () => clearTimeout(timer)
   }, [])
 
   return null
