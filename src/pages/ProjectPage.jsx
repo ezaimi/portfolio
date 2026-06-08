@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import Navbar from '../components/layout/Navbar'
 import { ALL_PROJECTS } from '../data/index'
 import DevProjectPage from './project-layouts/DevProjectPage'
@@ -18,9 +18,11 @@ const LAYOUTS = {
 }
 
 export default function ProjectPage() {
-  const { id }   = useParams()
-  const navigate = useNavigate()
-  const project  = ALL_PROJECTS.find((p) => p.id === Number(id))
+  const { id }      = useParams()
+  const navigate    = useNavigate()
+  const { state }   = useLocation()
+  const project     = ALL_PROJECTS.find((p) => p.id === Number(id))
+  const backTo      = state?.from === 'works' ? '/works' : '/#projects'
 
   if (!project) {
     return (
@@ -41,5 +43,5 @@ export default function ProjectPage() {
 
   const Layout = LAYOUTS[project.category] ?? ProductDesignProjectPage
 
-  return <Layout project={project} prevProject={prevProject} nextProject={nextProject} />
+  return <Layout project={project} prevProject={prevProject} nextProject={nextProject} backTo={backTo} />
 }

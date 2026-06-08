@@ -269,7 +269,7 @@ export default function WorksPage() {
               className="work-row"
               onMouseEnter={() => handleRowEnter(project)}
               onMouseLeave={handleRowLeave}
-              onClick={() => navigate(`/projects/${project.id}`)}
+              onClick={() => navigate(`/projects/${project.id}`, { state: { from: 'works' } })}
               style={{
                 borderTop: '1px solid rgba(26,26,26,0.12)',
                 padding: '22px 0',
@@ -309,7 +309,7 @@ export default function WorksPage() {
                 <span
                   style={{
                     ...mono,
-                    fontSize: '0.62rem',
+                    fontSize: 'clamp(0.62rem, 0.55vw, 0.75rem)',
                     color: hoveredId === project.id ? '#555' : '#aaa',
                     lineHeight: 1.7,
                     textTransform: 'none',

@@ -548,12 +548,14 @@ export default function Hero() {
     window.addEventListener('resize', updateBorderPx)
     window.addEventListener('pageshow', onPageShow)
 
-    const resetToHeroStart = ({ markLoaderDone = false, animateName = false } = {}) => {
-      const html = document.documentElement
-      const prev = html.style.scrollBehavior
-      html.style.scrollBehavior = 'auto'
-      window.scrollTo(0, 0)
-      html.style.scrollBehavior = prev
+    const resetToHeroStart = ({ markLoaderDone = false, animateName = false, skipScroll = false } = {}) => {
+      if (!skipScroll) {
+        const html = document.documentElement
+        const prev = html.style.scrollBehavior
+        html.style.scrollBehavior = 'auto'
+        window.scrollTo(0, 0)
+        html.style.scrollBehavior = prev
+      }
 
       if (markLoaderDone) loaderDoneRef.current = true
       subtitlesDoneRef.current = false
@@ -587,7 +589,7 @@ export default function Hero() {
     window.addEventListener('loader:done', triggerName, { once: true })
 
     if (window.__loaderDone) {
-      requestAnimationFrame(() => resetToHeroStart({ markLoaderDone: true, animateName: true }))
+      requestAnimationFrame(() => resetToHeroStart({ markLoaderDone: true, animateName: true, skipScroll: Boolean(window.location.hash) }))
     }
 
     // Spin the mobile badge

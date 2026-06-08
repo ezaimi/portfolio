@@ -28,7 +28,7 @@ const META_FIELDS = (p) => [
   { label: '// status',   value: 'Completed' },
 ]
 
-export default function ProductDesignProjectPage({ project, prevProject, nextProject }) {
+export default function ProductDesignProjectPage({ project, prevProject, nextProject, backTo = '/#projects' }) {
   const navigate = useNavigate()
   const isMobile = useIsMobile()
 
@@ -65,7 +65,7 @@ export default function ProductDesignProjectPage({ project, prevProject, nextPro
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', position: 'relative', zIndex: 60 }}>
           <button
             ref={backRef}
-            onClick={() => navigate('/#projects', { state: { filter: project.category } })}
+            onClick={() => backTo === '/works' ? navigate('/works') : navigate('/#projects', { state: { filter: project.category } })}
             style={{ ...mono, fontSize: '0.78rem', color: '#909090', background: 'none', border: 'none', cursor: 'pointer', padding: 0, marginLeft: '10px', transition: 'color 0.2s', display: 'flex', alignItems: 'center', gap: '8px' }}
             onMouseEnter={(e) => (e.currentTarget.style.color = '#F9F3E2')}
             onMouseLeave={(e) => (e.currentTarget.style.color = '#909090')}

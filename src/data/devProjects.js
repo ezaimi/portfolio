@@ -26,7 +26,7 @@ export const DEV_PROJECTS = [
 
   {
     id: 2,
-    name: "KALTËR — Digital Wedding Invitations",
+    name: "Before the Bells",
     year: "2026",
     type: "Next.js · Astro",
     category: "Development",
@@ -36,22 +36,21 @@ export const DEV_PROJECTS = [
       "/images/dev/wedding/template2.webp",
       "/images/dev/wedding/wedding3.webp",
     ],
-    desc: "A full-stack platform for building and sharing personalized digital wedding invitations — six animated templates, built-in RSVP tracking, and a couple's own soundtrack, all behind a single shareable link.",
+    desc: "A full-stack platform for building and sharing personalized digital wedding invitations — many animated templates, built-in RSVP tracking, and a couple's own soundtrack, all behind a single shareable link.",
     overview:
-      "Paper wedding invitations are expensive to print, easy to lose, and tell you nothing about who's actually coming. KALTËR replaces them with a digital invitation each couple can personalize and share as one link. A public marketing site introduces the product, while a separate invitation engine renders the couple's chosen design from six distinct templates — each with its own layout, animations, and theme. Guests open the link, read the details, and RSVP in place; the couple watches responses arrive through a guest-tracking view, and can even attach a playlist by searching Spotify and iTunes to set the mood with 30-second previews. The two halves run on different tools by design — Astro for a fast, static marketing site, and Next.js for the dynamic, per-couple invitation pages and API routes.",
+      "Paper wedding invitations are expensive to print, easy to lose, and tell you nothing about who's actually coming. Before the Bells replaces them with a digital invitation each couple can personalize and share as one link. A public marketing site introduces the product, while a separate invitation engine renders the couple's chosen design from many distinct templates — each with its own layout, animations, and theme. Guests open the link, read the details, and RSVP in place; the couple watches responses arrive through a guest-tracking dashboard, and can even attach a playlist by searching Spotify and iTunes to set the mood with 30-second previews. Each part runs on the tool that fits it — Astro for a fast, static marketing site, Next.js for the dynamic per-couple invitation pages, and an Express backend that collects RSVP submissions and powers the couple's dashboard.",
     features: [
-      "Six distinct invitation templates — each with its own layout, animation style, and theme, so couples pick what fits their wedding",
-      "Built-in RSVP system — guests respond in place, and the couple tracks every submission from a single view",
+      "More than 10 distinct invitation templates — each with its own layout, animation style, and theme, so couples pick what fits their wedding",
+      "Built-in RSVP system — guests respond in place, and the couple tracks every submission from a dashboard backed by an Express API",
       "Music integration through the Spotify and iTunes APIs — search any track and attach 30-second previews to set the mood",
       "Dynamic URL routing gives each couple a unique, shareable invitation link",
-      "Split architecture on purpose — a static Astro marketing site for speed, a dynamic Next.js engine for the live invitations",
+      "Split architecture on purpose — a static Astro marketing site, a dynamic Next.js invitation engine, and an Express backend for RSVP collection and the dashboard",
       "Polished motion throughout — Framer Motion and GSAP for animation, Lenis for smooth scrolling",
     ],
     stack:
-      "Astro (static marketing site) · Next.js 16 / React 19 (dynamic invitation pages, routing, API routes) · TypeScript · Tailwind CSS 4 · Framer Motion · GSAP · Lenis · Spotify & iTunes APIs — Deployed on Vercel with CI/CD via GitHub Actions.",
-    role: "Developer and UI/UX designer in a 2-person team — designed all invitation templates and built some of them; designed, co-developed, and now maintain the marketing site.",
+      "Astro (static marketing site) · Next.js 16 / React 19 (dynamic invitation pages, routing) · Express / Node.js (RSVP collection + dashboard API) · TypeScript · Tailwind CSS 4 · Framer Motion · GSAP · Lenis · Spotify & iTunes APIs — Deployed on Vercel with CI/CD via GitHub Actions.",
+    role: "Developer and UI/UX designer in a 2-person team — designed all invitation templates and built some of them; designed, co-developed, and now maintaining the marketing site.",
     status: "Completed",
-   
   },
 
   {
@@ -88,7 +87,7 @@ export const DEV_PROJECTS = [
     type: "Three.js · WebXR · Next.js",
     category: "Development",
     img: "/images/dev/webxr/3dmockup.webp",
-     images: [
+    images: [
       "/images/dev/webxr/3dmockup.webp",
       "/images/dev/webxr/3dmock.webp",
     ],

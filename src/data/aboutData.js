@@ -11,7 +11,7 @@
 export const EXPERIENCE = [
   { role: 'Web Developer & Visual Designer',  company: 'Studit, Remote',   years: '09/2024 – 06/2025' },
   { role: 'International Virtual Internship', company: 'Vodafone, Remote', years: '04/2023 – 06/2023' },
-  { role: 'Freelance Full-Stack Developer',   company: 'Self-employed',    years: '2022 – 2025' },
+  { role: 'Freelance Full-Stack Developer',   company: 'Self-employed',    years: '06/2024 – Present' },
 ]
 
 export const EDUCATION = [

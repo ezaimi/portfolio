@@ -51,7 +51,7 @@ export const PRODUCT_DESIGN_PROJECTS = [
   },
   {
     id: 12,
-    name: "Form Brute",
+    name: "Forme Brute",
     year: "2025",
     type: "Brand Identity",
     category: "Product Design",
