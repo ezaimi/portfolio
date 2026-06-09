@@ -3,7 +3,7 @@ import {
   ensureSessionsTable,
   type ApiRequest,
   type ApiResponse,
-} from './visitorTracking'
+} from './visitorTracking.js'
 
 export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (req.method !== 'GET' && req.method !== 'POST') {

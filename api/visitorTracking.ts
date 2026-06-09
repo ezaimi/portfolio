@@ -37,6 +37,8 @@ const PAGE_LABELS: Record<string, string> = {
   '/works': 'Works',
   '/contact': 'Contact',
 }
+const DEFAULT_VISITOR_EMAIL_FROM = 'Portfolio Tracker <tracker@erisazaimi.com>'
+const DEFAULT_VISITOR_EMAIL_TO = 'erisazaimi22@gmail.com'
 
 let sqlClient: ReturnType<typeof neon> | null = null
 let resendClient: Resend | null = null
@@ -54,6 +56,10 @@ function getSql() {
 
   sqlClient = neon(databaseUrl)
   return sqlClient
+}
+
+export function hasSessionStore() {
+  return Boolean(env('DATABASE_URL'))
 }
 
 function getResend() {
@@ -366,20 +372,26 @@ export async function sendVisitorEmail({
   messageId?: string
   replyToMessageId?: string
 }) {
-  const from = env('VISITOR_EMAIL_FROM')
-  const to = env('VISITOR_EMAIL_TO')
+  const from = env('VISITOR_EMAIL_FROM') || DEFAULT_VISITOR_EMAIL_FROM
+  const to = env('VISITOR_EMAIL_TO') || DEFAULT_VISITOR_EMAIL_TO
 
   if (!from) throw new Error('VISITOR_EMAIL_FROM is not configured')
   if (!to) throw new Error('VISITOR_EMAIL_TO is not configured')
 
   const headers: Record<string, string> = {}
-  if (action === 'start' && messageId) headers['Message-ID'] = messageId
+  if (messageId) headers['Message-ID'] = messageId
   if (replyToMessageId) {
     headers['In-Reply-To'] = replyToMessageId
     headers.References = replyToMessageId
   }
 
-  const subject = action === 'start' ? `Portfolio visit - ${location}` : `Re: Portfolio visit - ${location}`
+  const subject = replyToMessageId
+    ? `Re: Portfolio visit - ${location}`
+    : action === 'final'
+      ? `Portfolio visit ended - ${location}`
+      : action === 'update'
+        ? `Portfolio visit update - ${location}`
+        : `Portfolio visit - ${location}`
   const html = buildEmailHtml(action, visitorInfo, location, ip)
 
   const deliver = async () => {
