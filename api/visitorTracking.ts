@@ -285,6 +285,11 @@ export function visitorMetaFromRequest(req: ApiRequest) {
   const country = decodeHeader(readHeader(req.headers, 'x-vercel-ip-country'))
   const location = [city, country].filter(Boolean).join(', ') || 'Unknown'
 
+  const geoHeaders = Object.fromEntries(
+    Object.entries(req.headers).filter(([k]) => k.startsWith('x-vercel-ip'))
+  )
+  console.log('[tracker] geo:', JSON.stringify({ ip, city, country, location, geoHeaders }))
+
   return { city, country, ip, location }
 }
 
