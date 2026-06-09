@@ -194,7 +194,7 @@ function row(label: string, value: string) {
 
 function buildEmailHtml(action: VisitorAction, visitorInfo: JsonObject, location: string, ip: string) {
   const now = new Date().toLocaleString('en-US', {
-    timeZone: 'UTC',
+    timeZone: 'Europe/Berlin',
     dateStyle: 'medium',
     timeStyle: 'short',
   })
@@ -241,7 +241,7 @@ function buildEmailHtml(action: VisitorAction, visitorInfo: JsonObject, location
                     <td style="padding:0 26px 26px;background:#fff5f8;">
                       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:collapse;background:#ffffff;border:1px solid #f4c2d8;border-radius:12px;overflow:hidden;">
                         ${row('Location',     location)}
-                        ${row('Time',         now + ' UTC')}
+                        ${row('Time',         now + ' Berlin time')}
                         ${row('Device',       `${device} / ${browser}`)}
                         ${row('Referrer',     referrer)}
                         ${row('Pages',        pagesStr)}
